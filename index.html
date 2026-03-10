@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>형님 식단관리</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>형님 식단관리 웹앱</h1>
+    <p class="sub">목표 설정 → 권장 칼로리 계산 → 하루 식단 기록</p>
+
+    <section class="card">
+      <h2>1) 프로필/목표</h2>
+      <div class="grid">
+        <label>목표
+          <select id="goal">
+            <option value="cut">감량</option>
+            <option value="maintain">유지</option>
+            <option value="bulk">증량</option>
+          </select>
+        </label>
+        <label>키(cm)
+          <input id="height" type="number" placeholder="예: 175" />
+        </label>
+        <label>체중(kg)
+          <input id="weight" type="number" placeholder="예: 78" />
+        </label>
+        <label>활동량
+          <select id="activity">
+            <option value="1.2">낮음(앉아서 일함)</option>
+            <option value="1.375">보통</option>
+            <option value="1.55">높음</option>
+          </select>
+        </label>
+      </div>
+      <button id="calcBtn">권장 칼로리 계산</button>
+      <p id="calorieResult" class="result">아직 계산 전</p>
+    </section>
+
+    <section class="card">
+      <h2>2) 오늘 식단 기록</h2>
+      <form id="mealForm" class="grid">
+        <label>끼니
+          <select id="mealType">
+            <option>아침</option>
+            <option>점심</option>
+            <option>저녁</option>
+            <option>간식</option>
+          </select>
+        </label>
+        <label>음식명
+          <input id="foodName" required placeholder="예: 닭가슴살 샐러드" />
+        </label>
+        <label>칼로리(kcal)
+          <input id="foodKcal" type="number" required placeholder="예: 420" />
+        </label>
+        <label>탄수(g)
+          <input id="foodCarb" type="number" placeholder="예: 35" />
+        </label>
+        <label>단백질(g)
+          <input id="foodProtein" type="number" placeholder="예: 32" />
+        </label>
+        <label>지방(g)
+          <input id="foodFat" type="number" placeholder="예: 12" />
+        </label>
+        <button type="submit">기록 추가</button>
+      </form>
+
+      <div class="summary">
+        <p>총 칼로리: <strong id="sumKcal">0</strong> kcal</p>
+        <p>탄/단/지: <strong id="sumMacro">0 / 0 / 0 g</strong></p>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>끼니</th><th>음식</th><th>kcal</th><th>탄/단/지</th><th></th></tr>
+        </thead>
+        <tbody id="mealBody"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>3) 7일 기본 루틴(샘플)</h2>
+      <ul id="weeklyTemplate"></ul>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
