@@ -6,19 +6,26 @@ function saveMeals() { localStorage.setItem('diet_meals', JSON.stringify(meals))
 function calcCalories() {
   const h = Number($('height').value || 0)
   const w = Number($('weight').value || 0)
+  const age = Number($('age').value || 0)
+  const sex = $('sex').value
   const act = Number($('activity').value || 1.2)
   const goal = $('goal').value
-  if (!h || !w) return $('calorieResult').textContent = '키/체중을 입력해 주세요.'
+  if (!h || !w || !age) return $('calorieResult').textContent = '성별/나이/키/체중을 입력해 주세요.'
 
-  // 간단 추정(BMR 대체): 체중*22
-  let tdee = w * 22 * act
-  if (goal === 'cut') tdee -= 350
+  // 전문가식 Mifflin-St Jeor
+  const bmr = sex === 'male'
+    ? 10 * w + 6.25 * h - 5 * age + 5
+    : 10 * w + 6.25 * h - 5 * age - 161
+
+  let tdee = bmr * act
+  if (goal === 'cut') tdee -= 450
   if (goal === 'bulk') tdee += 300
-  const protein = Math.round(w * 1.8)
-  const fat = Math.round(w * 0.8)
-  const carb = Math.round((tdee - protein * 4 - fat * 9) / 4)
 
-  $('calorieResult').textContent = `권장: ${Math.round(tdee)} kcal / 탄수 ${carb}g · 단백질 ${protein}g · 지방 ${fat}g`
+  const protein = Math.round(goal === 'cut' ? w * 2.0 : w * 1.8)
+  const fat = Math.round(w * 0.8)
+  const carb = Math.max(0, Math.round((tdee - protein * 4 - fat * 9) / 4))
+
+  $('calorieResult').textContent = `권장: ${Math.round(tdee)} kcal (BMR ${Math.round(bmr)}) / 탄수 ${carb}g · 단백질 ${protein}g · 지방 ${fat}g`
 }
 
 function renderMeals() {
@@ -49,7 +56,11 @@ window.removeMeal = (idx) => {
   saveMeals(); renderMeals()
 }
 
-$('calcBtn').addEventListener('click', calcCalories)
+;['goal','sex','age','height','weight','activity'].forEach((id) => {
+  $(id).addEventListener('input', calcCalories)
+  $(id).addEventListener('change', calcCalories)
+})
+
 $('mealForm').addEventListener('submit', (e) => {
   e.preventDefault()
   meals.push({
@@ -71,3 +82,4 @@ $('weeklyTemplate').innerHTML = [
 ].map(x => `<li>${x}</li>`).join('')
 
 renderMeals()
+calcCalories()

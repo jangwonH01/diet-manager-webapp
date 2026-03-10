@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>형님 식단관리</title>
+  <title>식단관리</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <main class="container">
-    <h1>형님 식단관리 웹앱</h1>
+    <h1>식단관리 웹앱</h1>
     <p class="sub">목표 설정 → 권장 칼로리 계산 → 하루 식단 기록</p>
 
     <section class="card">
@@ -20,6 +20,15 @@
             <option value="maintain">유지</option>
             <option value="bulk">증량</option>
           </select>
+        </label>
+        <label>성별
+          <select id="sex">
+            <option value="male">남성</option>
+            <option value="female">여성</option>
+          </select>
+        </label>
+        <label>나이
+          <input id="age" type="number" placeholder="예: 35" />
         </label>
         <label>키(cm)
           <input id="height" type="number" placeholder="예: 175" />
@@ -35,8 +44,7 @@
           </select>
         </label>
       </div>
-      <button id="calcBtn">권장 칼로리 계산</button>
-      <p id="calorieResult" class="result">아직 계산 전</p>
+      <p id="calorieResult" class="result">프로필 입력 시 자동 계산됩니다.</p>
     </section>
 
     <section class="card">
