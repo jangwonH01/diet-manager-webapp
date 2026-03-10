@@ -1,6 +1,19 @@
 const $ = (id) => document.getElementById(id)
 const meals = JSON.parse(localStorage.getItem('diet_meals') || '[]')
 
+const FOOD_DB = {
+  '닭가슴살': { kcal: 165, carb: 0, protein: 31, fat: 3.6 },
+  '고구마': { kcal: 128, carb: 30, protein: 1.6, fat: 0.2 },
+  '현미밥': { kcal: 160, carb: 34, protein: 3.2, fat: 1.1 },
+  '계란': { kcal: 78, carb: 0.6, protein: 6.3, fat: 5.3 },
+  '연어': { kcal: 208, carb: 0, protein: 20, fat: 13 },
+  '바나나': { kcal: 89, carb: 23, protein: 1.1, fat: 0.3 },
+  '그릭요거트': { kcal: 97, carb: 3.6, protein: 9, fat: 5 },
+  '두부': { kcal: 76, carb: 1.9, protein: 8, fat: 4.8 },
+  '샐러드': { kcal: 33, carb: 6, protein: 2, fat: 0.4 },
+  '아보카도': { kcal: 160, carb: 9, protein: 2, fat: 15 },
+}
+
 function saveMeals() { localStorage.setItem('diet_meals', JSON.stringify(meals)) }
 
 function calcCalories() {
@@ -56,10 +69,34 @@ window.removeMeal = (idx) => {
   saveMeals(); renderMeals()
 }
 
+function autoFillByFoodName() {
+  const name = ($('foodName').value || '').trim()
+  if (!name) return
+
+  let found = null
+  for (const key of Object.keys(FOOD_DB)) {
+    if (name.includes(key)) { found = FOOD_DB[key]; break }
+  }
+
+  if (!found) {
+    $('foodHint').textContent = 'DB에 없는 음식입니다. 칼로리/탄단지를 수동 입력해 주세요.'
+    return
+  }
+
+  $('foodKcal').value = found.kcal
+  $('foodCarb').value = found.carb
+  $('foodProtein').value = found.protein
+  $('foodFat').value = found.fat
+  $('foodHint').textContent = `자동입력 완료: ${Math.round(found.kcal)}kcal 기준`
+}
+
 ;['goal','sex','age','height','weight','activity'].forEach((id) => {
   $(id).addEventListener('input', calcCalories)
   $(id).addEventListener('change', calcCalories)
 })
+
+$('foodName').addEventListener('change', autoFillByFoodName)
+$('foodName').addEventListener('blur', autoFillByFoodName)
 
 $('mealForm').addEventListener('submit', (e) => {
   e.preventDefault()
